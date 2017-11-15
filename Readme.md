@@ -1,7 +1,7 @@
 # Личный проект «Кексобукинг» [![Build status][travis-image]][travis-url]
 
 * Студент: [Владимир Сливков](https://up.htmlacademy.ru/javascript/11/user/578683).
-* Наставник: `Неизвестно`.
+* Наставник: `Данил Чекалин`.
 
 ---
 
