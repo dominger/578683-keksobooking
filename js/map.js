@@ -75,30 +75,38 @@ var emptyArray = [
 
 ];
 
+// добавление аватаров в массив
+var image = [];
+var enterImage = function () {
+  for (var i = 0; i < AVATARS[i]; i++) {
+    var pushed = image.push(AVATARS[i])
+  }
+}
+
 for (var i = 0; i < 7; i++) {
 var dataOccupant = [
-    "author": {
-      "avatar": AVATARS[i],
+  author: {
+  avatar: image[i],
 },
 
-"offer": {
-  "title": TITLES[i],
-  "address": location.x + " " + location.y,
-  "price": randomNumber(1000, 1000000),
-  "type": randomNumberArray(typeHouse),
-  "rooms": randomNumberArray(numRooms),
-  "guests": randomNumber(1, 15),
-  "checkin": randomNumberArray(numCheckin),
-    "checkout": randomNumberArray(numCheckin),
-  "features": randomNumberArray(differentFeatures),
-    "description": "",
-    "photos": emptyArray
+offer: {
+  title: TITLES[i],
+  address: location.x + " " + location.y,
+  price: randomNumber(1000, 1000000),
+  type: randomNumberArray(typeHouse),
+  rooms: randomNumberArray(numRooms),
+  guests: randomNumber(1, 15),
+  checkin: randomNumberArray(numCheckin),
+  checkout: randomNumberArray(numCheckin),
+  features: randomNumberArray(differentFeatures),
+  description: "",
+  photos: emptyArray
 },
 
 // случайная координата на карте
-"location": {
-  "x": randomNumber(300, 900),
-    "y": randomNumber(100, 500)
+location: {
+  x: randomNumber(300, 900),
+  y: randomNumber(100, 500)
   }
 ];
 }
@@ -112,20 +120,24 @@ blockMap.classList.remove(".map--faded"); // через classList удаляем
 
 var pinsContainer = document.querySelector(".map-pins");
 
-// копируем содержимое шаблона template и копируем его содержимое
+// копируем содержимое шаблона template
 var copyTemplate = document.querySelector(".map__card popup").content;
 var cardElement = copyTemplate.cloneNode(true);
 
 // вставка полученного DOM элемента в блок
 var elementMapCard = document.querySelector(".map");
 
-// генерируем метки на карте ??? Вопрос тут ???
-/*var generatePins = function () {
-  var elementPin = "<button style="left: {{location.x - 20}}px; top: {{location.y - 40}}px;" class="map__pin">
-    <img src="{{author.avatar}}" width="40" height="40" draggable="false">
-    </button>";
+// генерируем метки на карте
+var generatePins = function (pin) {
+  var elementPin =
+  <button style=
+	"left: "" + (pin.location.x - 20)"" + px;
+	top: "" + (pin.location.y - 40)"" + px;
+	class="map__pin"><img src=""img/avatars/user01.png""
+	width="40" height="40" draggable="false">
+  </button>";
   return elementPin;
-}*/
+};
 
 // генерируем объявление
 var generatePoster = function (dataOccupant) {
@@ -142,7 +154,7 @@ var generatePoster = function (dataOccupant) {
   // тип жилья
   if (dataOccupant.offer.type === "flat") {
     cardElement.querySelector("h4").textContent = "Квартира";
-  } else if (dataOccupant.offer.type === "bungalo"){
+  } else if (dataOccupant.offer.type === "bungalo") {
     cardElement.querySelector("h4").textContent = "Бунгало";
   } else {
     cardElement.querySelector("h4").textContent = "Дом";
@@ -150,24 +162,30 @@ var generatePoster = function (dataOccupant) {
 
   // количество гостей
   cardElement.querySelector("h4 + p").innerHTML = dataOccupant.offer.rooms +
-          " комнаты для " + dataOccupant.offer.guests + " гостей";
+    " комнаты для " + dataOccupant.offer.guests + " гостей";
 
   // время заезда и выезда / :nth-child() - находит номер потомка
   cardElement.querySelector("p:nth-child(8)").innerHTML = "Заезд после "
-          + dataOccupant.offer.checkin + ", выезд до "
-          + dataOccupant.offer.checkout;
+    + dataOccupant.offer.checkin + ", выезд до "
+    + dataOccupant.offer.checkout;
 
-  // доступные удобства в квартире ? Вопрос тут ?
+  // доступные удобства в квартире
   /*В список .popup__features выведите все доступные удобства в квартире из массива {{offer.features}}
   пустыми элементами списка (<li>) с классом feature feature--{{название удобства}}*/
-  for (var j = 0; i < differentFeatures.length; j++) {
+  for (var i = 0; i < differentFeatures.length; i++) {
+  var nodes = "<li class = "feature feature--" + randomNumberArray(differentFeatures) + ""></li>";
 
+  cardElement.querySelector(".popup__features").insertAdjacentHTML("beforeend", nodes);
   }
-}
+
+  cardElement.querySelector("ul + p").innerHTML = dataOccupant.offer.descriptions;
+
+  return cardElement;
+};
 
 var fragment = document.createDocumentFragment(); // контейнер, временная группировка элементов в document
                                                 // после вставки элементов, контейнер createDocumentFragment удаляется
-
+// заполнение DOM через js объекты
 for (var i = 0; i < dataOccupant.length; i++) {
   fragment.appendChild(generatePoster(dataOccupant[i]));
 }
