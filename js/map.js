@@ -136,11 +136,11 @@ for (var q = 0; q < data.length; q++) {
 
 // 5 здание - генерируем объявление
 // находим содержимое шаблона template
-var copyTemplate = document.querySelector('.article').content;
+var copyTemplate = document.querySelector('template').content.querySelector('.map__card');
+var cardElement = copyTemplate.cloneNode(true); // копируем содержимое шаблона template
 var fragmentCard = document.createDocumentFragment();
 
 var generatePoster = function (card) {
-  var cardElement = copyTemplate.cloneNode(true); // копируем содержимое шаблона template
 
   // заголовок объвления
   cardElement.querySelector('h3').textContent = card.offer.title;
