@@ -69,35 +69,37 @@ var randomNumber = function (min, max) {
   return num.toFixed(0);
 };
 
-// пустой массив
-var emptyArray = [];
-
-// функция добавления новых изображений в массив
-var imageAVATARS = [];
-var pushImage = function (array) {
-  for (var i = 0; i < array.length; i++) {
-    var pushed = imageAVATARS.push(array[i]);
-  }
-  return pushed;
-};
-pushImage(AVATARS);
-
 // сортируем массив случайным образом
 var compareRandom = function () {
   return Math.random() - 0.5;
 };
 
+// сортировка удобств случайным образом
 var featuresRandom = differentFeatures.sort(compareRandom).splice(randomNumber(0, 3), randomNumber(3, 5));
 
+// сортировка аватаров случайным образом
+var avatarsRandom = AVATARS.sort(compareRandom);
+
+var array = [];
 // 2 задание - создание массива из 8 сгенерированных JS - объектов
 for (var j = 0; j < 7; j++) {
+  var randomLocation = {
+    x: randomNumber(300, 900),
+    y: randomNumber(100, 500)
+  };
+
+  // заполняем объект
   var data = {
     'author': {
-      'avatar': imageAVATARS
+      'avatar': avatarsRandom[j]
+    },
+    'location': {
+      'x': randomNumber(300, 900),
+      'y': randomNumber(100, 500)
     },
     'offer': {
       'title': TITLES[j],
-      'address': location.x + ' ' + location.y,
+      'address': randomLocation.x + ':' + randomLocation.y,
       'price': randomNumber(1000, 1000000),
       'type': randomNumberArray(typeHouse),
       'rooms': randomNumberArray(numRooms),
@@ -106,13 +108,10 @@ for (var j = 0; j < 7; j++) {
       'checkout': randomNumberArray(numCheckin),
       'features': featuresRandom,
       'description': '',
-      'photos': emptyArray
-    },
-    'location': {
-      'x': randomNumber(300, 900),
-      'y': randomNumber(100, 500)
+      'photos': []
     }
   };
+  array.push(data);
 }
 
 /*
@@ -124,14 +123,14 @@ blockMap.classList.remove('.map--faded'); // через classList удаляем
 
 // 3 задание - генерируем метки на карте
 var generatePins = function (pin) {
-  return '<button style="left:' + (pin.location.x - 20) + 'px; top: ' + (pin.location.y - 40) + 'px;" class="map__pin">' +
+  return '<button style="left:' + (pin.location.x - 20) + 'px; top: ' + (pin.location.y - 10) + 'px;" class="map__pin">' +
     '<img src="' + pin.author.avatar + '" width="40" height="40" draggable="false"></button>';
 };
 
-// 4 задание - отрисовка сгенерированных DOM-элементов в блок ".map__pins"
-var pinsContainer = document.querySelector('.map-pins');
-for (var q = 0; q < data.length; q++) {
-  pinsContainer.insertAdjacentHTML('beforeEnd', generatePins(data[q]));
+// 4 задание - отрисовка сгенерированных DOM-элементов - меток - в блок ".map__pins"
+var pinsContainer = document.querySelector('.map__pins');
+for (var q = 0; q < array.length; q++) {
+  pinsContainer.insertAdjacentHTML('beforeEnd', generatePins(array[q]));
 }
 
 // 5 здание - генерируем объявление
@@ -149,7 +148,7 @@ var generatePoster = function (card) {
   cardElement.querySelector('p small').textContent = card.offer.address;
 
   // цена / innerHTML - вставляет весь текстовый блок
-  cardElement.querySelector('.popup__price').innerHTML = card.offer.price + '&#x20bd;/ночь';
+  cardElement.querySelector('.popup__price').innerHTML = card.offer.price + ' &#x20bd;/ночь';
 
   // тип жилья
   if (card.offer.type === 'flat') {
@@ -161,19 +160,26 @@ var generatePoster = function (card) {
   }
 
   // количество гостей
-  cardElement.querySelector('h4 + p').innerHTML = card.offer.rooms +
+  cardElement.querySelector('p:nth-child(7)').innerHTML = card.offer.rooms +
     ' комнаты для ' + card.offer.guests + ' гостей';
 
   // время заезда и выезда / :nth-child() - находит номер потомка
-  cardElement.querySelector('p:nth-child(7)').innerHTML = 'Заезд после '
+  cardElement.querySelector('p:nth-child(8)').innerHTML = 'Заезд после '
     + card.offer.checkin + ', выезд до '
     + card.offer.checkout;
 
+  // читим потомком .popup__features
+  cardElement.querySelector('.popup__features').removeChild(cardElement.querySelector('.popup__features li'));
+  while (cardElement.querySelector('.popup__features').lastChild) {
+    cardElement.querySelector('.popup__features').removeChild(cardElement.querySelector('.popup__features').lastChild);
+  }
+
   // доступные удобства в квартире
   for (var i = 0; i < featuresRandom.length; i++) {
-    var nodes = '<li class="feature feature--"' + featuresRandom[i] + '></li>';
+    var nodes = '<li class="feature feature--"' + featuresRandom + '></li>';
     cardElement.querySelector('.popup__features').insertAdjacentHTML('beforeEnd', nodes);
   }
+
   // описание объекта недвижимости
   cardElement.querySelector('ul + p').innerHTML = card.offer.description;
 
@@ -183,8 +189,8 @@ var generatePoster = function (card) {
   return cardElement;
 };
 
-for (var b = 0; b < data.length; b++) {
-  fragmentCard.appendChild(generatePoster(data[b]));
+for (var b = 0; b < array.length; b++) {
+  fragmentCard.appendChild(generatePoster(array[b]));
 }
 
 // вставка полученного DOM-элемента в блок
