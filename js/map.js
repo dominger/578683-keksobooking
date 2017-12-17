@@ -176,7 +176,7 @@ var generatePoster = function (card) {
 
   // доступные удобства в квартире
   for (var i = 0; i < featuresRandom.length; i++) {
-    var nodes = '<li class="feature feature--"' + featuresRandom + '></li>';
+    var nodes = '<li class="feature feature--' + featuresRandom[i] + '"></li>'; // обратить внимание в будущем!!!
     cardElement.querySelector('.popup__features').insertAdjacentHTML('beforeEnd', nodes);
   }
 
