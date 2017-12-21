@@ -119,7 +119,6 @@ for (var j = 0; j < 7; j++) {
 */
 
 var blockMap = document.querySelector('.map'); // поиск селектора
-blockMap.classList.remove('.map--faded'); // через classList удаляем класс map--faded
 
 // 3 задание - генерируем метки на карте
 var generatePins = function (pin) {
@@ -199,3 +198,36 @@ blockMap.insertBefore(fragmentCard, document.querySelector('.map__filters-contai
 /*
 конец заполнения блока DOM элементами на основе JS-объектов
 */
+
+
+/* 4 модуль - подготовка сценария к событиям mouseup*/
+
+var popupClose = document.querySelector('.popup__close');
+var mapPopup = document.querySelector('.popup');
+
+/* var map = document.querySelector('.map');
+map.classList.remove('map--faded'); */
+
+
+var mapPins = document.querySelectorAll('.map__pin');
+var openElementPin = function () {
+  for (var z = 0; z < mapPins.length; z++) {
+    mapPins[z].classList.add('map__pin--active');
+  }
+  mapPopup.classList.remove('hidden');
+};
+
+var closeElementPin = function () {
+  mapPopup.classList.add('hidden');
+};
+
+mapPins.forEach(function (item) {
+  item.addEventListener('click', openElementPin);
+});
+popupClose.addEventListener('click', closeElementPin);
+
+/* mapPins.forEach(function (pin) { // для каждого элемента pin - списка/массива вызывает callback функцию
+  pin.addEventListener('click', openElementPin);
+});*/
+
+
