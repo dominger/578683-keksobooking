@@ -204,12 +204,8 @@ blockMap.insertBefore(fragmentCard, document.querySelector('.map__filters-contai
 
 var popupClose = document.querySelector('.popup__close');
 var mapPopup = document.querySelector('.popup');
-
-/* var map = document.querySelector('.map');
-map.classList.remove('map--faded'); */
-
-
 var mapPins = document.querySelectorAll('.map__pin');
+
 var openElementPin = function () {
   for (var z = 0; z < mapPins.length; z++) {
     mapPins[z].classList.add('map__pin--active');
