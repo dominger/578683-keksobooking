@@ -127,10 +127,12 @@ var generatePins = function (pin) {
 };
 
 // 4 задание - отрисовка сгенерированных DOM-элементов - меток - в блок ".map__pins"
-var pinsContainer = document.querySelector('.map__pins');
-for (var q = 0; q < array.length; q++) {
-  pinsContainer.insertAdjacentHTML('beforeEnd', generatePins(array[q]));
-}
+var allRenderMap = function () {
+  var pinsContainer = document.querySelector('.map__pins');
+  for (var q = 0; q < array.length; q++) {
+    pinsContainer.insertAdjacentHTML('beforeEnd', generatePins(array[q]));
+  }
+};
 
 // 5 здание - генерируем объявление
 // находим содержимое шаблона template
@@ -202,28 +204,70 @@ blockMap.insertBefore(fragmentCard, document.querySelector('.map__filters-contai
 
 /* 4 модуль - подготовка сценария к событиям mouseup*/
 
-var popupClose = document.querySelector('.popup__close');
-var mapPopup = document.querySelector('.popup');
-var mapPins = document.querySelectorAll('.map__pin');
+// работа с главным пином и мапой
+var mainPin = document.querySelector('.map__pin--main');
+var otherPins = document.querySelectorAll('.map__pin');
+var mapBlock = document.querySelectorAll('.map');
 
-var openElementPin = function () {
-  for (var z = 0; z < mapPins.length; z++) {
-    mapPins[z].classList.add('map__pin--active');
+var mainForm = document.querySelectorAll('.notice__form');
+var allFieldsets = document.querySelector('fieldset');
+
+/* var setArrayBlock = function (block) {
+  for (var q = 0; q < block.length; q++) {
+    block[q].classList.remove('map--faded');
   }
-  mapPopup.classList.remove('hidden');
+};*/
+
+var removeArrayBlock = function (block) {
+  for (var q = 0; q < block.length; q++) {
+    block[q].classList.remove('map--faded');
+  }
 };
+
+var addArrayBlock = function (block) {
+  for (var q = 0; q < block.length; q++) {
+    block[q].classList.remove('map--faded');
+  }
+};
+
+mainPin.addEventListener('mouseup', function () {
+  /* for (var q = 0; q < mapBlock.length; q++) {
+    mapBlock[q].classList.remove('map--faded');
+  }*/
+  removeArrayBlock(mapBlock).classList.remove('map--faded');
+  removeArrayBlock(mainForm).classList.remove('notice__form--disabled');
+  /* for (var w = 0; w < mainForm.length; w++) {
+    mainForm[w].classList.remove('notice__form--disabled');
+  }*/
+  allFieldsets.forEach(function (item) {
+    item.removeAttribute('disabled');
+  });
+  allRenderMap();
+});
+
+var mapCard = document.querySelector('.popup');
+var activePinElement = function () {
+  // mapCard.classList.remove('hidden');
+
+  addArrayBlock(otherPins).classList.add('map__pin--active');
+  /* for (var e = 0; e < otherPins.length; e++) {
+    otherPins[e].classList.add('map__pin--active');
+  }*/
+};
+
+otherPins.forEach(function (item) {
+  item.addEventListener('click', activePinElement);
+});
 
 var closeElementPin = function () {
-  mapPopup.classList.add('hidden');
+  mapCard.classList.add('hidden');
+
+  removeArrayBlock(otherPins).classList.remove('map__pin--active');
+  /* for (var r = 0; r < otherPins.length; r++) {
+    otherPins[r].classList.remove('map__pin--active');
+  }*/
 };
 
-mapPins.forEach(function (item) {
-  item.addEventListener('click', openElementPin);
-});
+var popupClose = document.querySelector('.popup__close');
 popupClose.addEventListener('click', closeElementPin);
-
-/* mapPins.forEach(function (pin) { // для каждого элемента pin - списка/массива вызывает callback функцию
-  pin.addEventListener('click', openElementPin);
-});*/
-
 
