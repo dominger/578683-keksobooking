@@ -118,7 +118,7 @@ for (var j = 0; j < 7; j++) {
 начало заполнения блока DOM элементами на основе JS-объектов
 */
 
-var blockMap = document.querySelector('.map'); // поиск селектора
+var blockMap = document.querySelector('.map'); // поиск селектора .map
 
 // 3 задание - генерируем метки на карте
 var generatePins = function (pin) {
@@ -190,6 +190,7 @@ var generatePoster = function (card) {
   return cardElement;
 };
 
+// генерация карточки с объявлениями
 for (var b = 0; b < array.length; b++) {
   fragmentCard.appendChild(generatePoster(array[b]));
 }
@@ -201,73 +202,59 @@ blockMap.insertBefore(fragmentCard, document.querySelector('.map__filters-contai
 конец заполнения блока DOM элементами на основе JS-объектов
 */
 
-
-/* 4 модуль - подготовка сценария к событиям mouseup*/
-
-// работа с главным пином и мапой
+/* 4 модуль работа с главным пином и мапой */
 var mainPin = document.querySelector('.map__pin--main');
-var otherPins = document.querySelectorAll('.map__pin');
-var mapBlock = document.querySelectorAll('.map');
-
 var mainForm = document.querySelectorAll('.notice__form');
-var allFieldsets = document.querySelector('fieldset');
+var allFieldsets = document.querySelectorAll('fieldset');
 
-/* var setArrayBlock = function (block) {
-  for (var q = 0; q < block.length; q++) {
-    block[q].classList.remove('map--faded');
-  }
-};*/
-
-var removeArrayBlock = function (block) {
-  for (var q = 0; q < block.length; q++) {
-    block[q].classList.remove('map--faded');
+// начало функций удаления и добавления атбрибутов, селекторов
+var removeAttribute = function (block, atribute) {
+  for (var y = 0; y < block.length; y++) {
+    block[y].removeAttribute(atribute);
   }
 };
 
-var addArrayBlock = function (block) {
+var removeElement = function (block, selector) {
   for (var q = 0; q < block.length; q++) {
-    block[q].classList.remove('map--faded');
+    block[0].classList.remove(selector);
   }
 };
 
+var addElement = function (block, selector) {
+  for (var q = 0; q < block.length; q++) {
+    block[q].classList.add(selector);
+  }
+};
+// конец функций удаления и добавления атбрибутов, селекторов
+
+// подготовка сценария к событиям mouseup
 mainPin.addEventListener('mouseup', function () {
-  /* for (var q = 0; q < mapBlock.length; q++) {
-    mapBlock[q].classList.remove('map--faded');
-  }*/
-  removeArrayBlock(mapBlock).classList.remove('map--faded');
-  removeArrayBlock(mainForm).classList.remove('notice__form--disabled');
-  /* for (var w = 0; w < mainForm.length; w++) {
-    mainForm[w].classList.remove('notice__form--disabled');
-  }*/
-  allFieldsets.forEach(function (item) {
-    item.removeAttribute('disabled');
-  });
-  allRenderMap();
+  blockMap.classList.remove('map--faded'); // убрать затемнение карты
+  allRenderMap(); // генерация меток на карте
+  removeElement(mainForm, 'notice__form--disabled'); // активация формы
+  removeAttribute(allFieldsets, 'disabled'); // активацмя полей формы
 });
 
+// показ карточки с объявлением
 var mapCard = document.querySelector('.popup');
 var activePinElement = function () {
-  // mapCard.classList.remove('hidden');
-
-  addArrayBlock(otherPins).classList.add('map__pin--active');
-  /* for (var e = 0; e < otherPins.length; e++) {
-    otherPins[e].classList.add('map__pin--active');
-  }*/
+  mapCard.classList.remove('hidden');
+  addElement(otherPins, 'map__pin--active');
 };
 
-otherPins.forEach(function (item) {
-  item.addEventListener('click', activePinElement);
-});
+// присовение каждому элементу .map__pin события показа карточки с объявлением
+var otherPins = document.querySelectorAll('.map__pin');
+for (var c = 0; c < otherPins.length; c++) {
+  otherPins[c].addEventListener('click', activePinElement);
+}
 
+// закрытие карточки с объявлением
 var closeElementPin = function () {
+  removeElement(otherPins, 'map__pin--active');
   mapCard.classList.add('hidden');
-
-  removeArrayBlock(otherPins).classList.remove('map__pin--active');
-  /* for (var r = 0; r < otherPins.length; r++) {
-    otherPins[r].classList.remove('map__pin--active');
-  }*/
 };
 
 var popupClose = document.querySelector('.popup__close');
 popupClose.addEventListener('click', closeElementPin);
+
 
